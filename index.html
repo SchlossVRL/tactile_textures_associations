@@ -19,7 +19,7 @@
     <script src="jsPsych/plugin-fullscreen.js"></script>
     <script src="jsPsych/plugin-preload.js"></script>
     <!-- <script src="imagePaths.js"></script> -->
-    <script src="exp1_conditions.js"></script>
+    <script src="exp0_conditions.js"></script>
     <link href="jsPsych/jspsych.css" rel="stylesheet" type="text/css">
     <script src="https://unpkg.com/@jspsych-contrib/plugin-pipe"></script>
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.1/underscore-min.js"></script> -->
@@ -47,47 +47,83 @@
             );
             var timeline = [];
 
-            console.log(image_paths.length)
+            //Set background to grey
+            document.body.style.backgroundColor = "rgb(128,128,128)"
+
+            console.log(textures.length)
             //get the SONA id from the url
 
-            //old data pipe: 711Sy98ZMvOS
-            //new data pipe: Rn56BHzIriFm - new data storage
+            //data pipe: CohtFpw9fJKx
 
 
-            const sona_id = jsPsych.data.getURLVariable('id');
+            //const sona_id = jsPsych.data.getURLVariable('id');
             const subject_id = jsPsych.randomization.randomID(10);
 
             const filename = `${subject_id}.csv`;
 
-            const condition_num = await jsPsychPipe.getCondition("Rn56BHzIriFm");
+            //const condition_num = await jsPsychPipe.getCondition("CohtFpw9fJKx");
             // const condition_num = 0;
 
             //Limit conditions run
 
             // Map condition_num to one of the three conditions
-            let assigned_condition;
+            /*let assigned_condition;
             if (condition_num >= 0 && condition_num <= 6) {
                 assigned_condition = 11;
             } else if (condition_num >= 7 && condition_num <= 13) {
                 assigned_condition = 13;
             } else {
                 console.error("Unexpected condition number:", condition_num);
-            }
+            }*/
 
             // Use the assigned condition number to get the concept list
-            concept_list = concept_conds[assigned_condition];
-            concept_list = jsPsych.randomization.shuffle(concept_list);
+            //concept_list = concept_conds[assigned_condition];
+            //concept_list = jsPsych.randomization.shuffle(concept_list);
+
+            // Prompt for participant ID
+            var participant_id = prompt("Please enter the participant ID:");
+
+            // Ensure input is valid
+            if (!participant_id || isNaN(participant_id)) {
+                alert("Invalid participant ID! Please reload the page and enter a numeric ID.");
+                throw new Error("Invalid participant ID.");
+            }
+
+            // Calculate the condition index
+            var condition_index = parseInt(participant_id) % 14;
+
+            // Assign the correct list based on the condition index
+            /*var textures;
+            var list_name;
+            if (condition_index === 0) {
+                textures = textures_list1;
+                list_name = "textures_list1";
+            } else if (condition_index === 1) {
+                textures = textures_list2;
+                list_name = "textures_list2";
+            } else {
+                textures = textures_list3;
+                list_name = "textures_list3";
+            }*/
+
 
             //ALL conditions
-            //concept_list = concept_conds[condition_num]
-            //concept_list = jsPsych.randomization.shuffle(concept_list);
+            console.log("participant_id:", participant_id)
+            console.log("condition_index", condition_index)
+            condition_num = condition_index - 1;
+            console.log("condition_num", condition_num)
+            concept_list = concept_conds[condition_num]
+            console.log("concept_list", concept_list)
+            concept_list = jsPsych.randomization.shuffle(concept_list);
+            texture_list = jsPsych.randomization.shuffle(textures);
 
 
 
             jsPsych.data.addProperties({
                 subject_id: subject_id,
-                condition_num: condition_num,
-                sona_id: sona_id
+                participant_id: participant_id
+                //condition_num: condition_num,
+                //sona_id: sona_id
             });
 
             // Initial welcome screen
@@ -101,8 +137,7 @@
             }
             timeline.push(initial_screen);
             let preload_trial = {
-                type: jsPsychPreload,
-                images: image_paths
+                type: jsPsychPreload
             }
             timeline.push(preload_trial);
 
@@ -123,8 +158,8 @@
 
 
             var instructions = {
-                // type: jsPsychHtmlButtonResponse,
-                type: jsPsychHtmlSliderResponse,
+                type: jsPsychHtmlButtonResponse,
+                //type: jsPsychHtmlSliderResponse,
                 stimulus: `
                         <div style="height:720px;">
                             <div style='text-align:left; font-size:18px; line-height:25px; width: 1200px;'>
@@ -137,22 +172,14 @@
                                 <p style="font-size:18px; line-height:18px;"></p>
                             </div>
                             <div style='text-align:left; font-size:18px; line-height:25px; width: 1200px;'>
-                                For each concept, you will be asked to rate how much you associate it with each of the visual textures
-                                below on a scale from 'not at all' to 'very much'.\
-                            </div>
-                            <div style="display: flex; justify-content: center; width: 90%;">
-                                <div style="text-align: center; width: 1000px; display: grid; grid-template-columns: repeat(13, .5fr); gap: 5px; padding: 5px; margin: 0 auto;">
-                                    ${image_paths.slice(0, 52).map((path, index) => `
-                                    <div style="width: 95%; aspect-ratio: 1;">
-                                        <img src="${path}" style="width: 100%; height: 100%; object-fit: cover;">
-                                    </div>
-                                    `).join('')}
-                                </div>
+                                For each texture bar, you will be asked to rate how much you associate it with each concept
+                                on a scale from 1 to 9 where 1 means 'not at all' and 9 means 'very much'.\
                             </div>
                             <br>
                             <div style='text-align:left; font-size:18px; line-height:25px; width: 1200px;'>
-                                Each trial will include one concept word and one visual texture. You will be asked to make your rating by
-                                sliding the cursor along a slider response scale.<br>\
+                                Each trial will include one texture bar and one concept word. You will be asked to make your rating by
+                                reporting how strongly you associate the texture with the concept on a scale from 1 to 9 where 1 means 'not at all'
+                                and 9 means 'very much'.<br>\
                                 Before beginning, please look at the list of concepts and textures. \
                                 For each concept, think about the texture you associate least with it.\
                                 When you see that texture paired with that concept please click on the left endpoint of the scale near 'not at
@@ -172,20 +199,9 @@
                         </div>
                          `,
                 choices: ['Continue'],
-                labels: ['', ''],
-                require_movement: false,
-                step: 1,
-                slider_start: 0,
-                min: -200,
-                max: 200,
-                response_ends_trial: false,
-                include_button: true,
                 data: {
                     practiceTrial: true,
-                },
-                slider_width: 500
-
-
+                }
             }
 
 
@@ -194,166 +210,43 @@
             timeline.push(instructions);
 
 
-            var slider_instructions = {
-                type: jsPsychHtmlButtonResponse,
-                stimulus: `<div style="width:800px;"><p style="text-align:left">To move the slider, click and drag your cursor to the location of the scale where you would like to make your rating and then let go. When you let go of the slider, your response will be recorded and the next trial will begin. <br>
-                    We are interested in your initial impressions of each concept for a given scale, so please go with your first intuition. <br>
-                    Before you begin the experiment, there will be four training trials for you to practice using the slider. <br>
-                     When you are ready to start the training trials, please click "Continue".</p><br></div>`,
-                choices: ['Continue']
-            }
 
-
-            timeline.push(slider_instructions);
-
-
-            // scales = jsPsych.randomization.shuffle(scales);
-
-
-            for (i = 0; i < 4; i++) {
-                let task
-                if (i == 0) {
-                    task = "Please move the slider all the way to the <br> right endpoint of the scale"
-                }
-                else if (i == 1) {
-                    task = "Please move the slider all the way to the <br> left endpoint of the scale"
-                }
-                else if (i == 2) {
-                    task = "Please move the slider halfway between the center and right endpoint of the scale"
-                }
-                else if (i == 3) {
-                    task = "Please move the slider halfway between the center and left endpoint of the scale"
-                }
-                var rating_trial = {
-                    type: jsPsychHtmlSliderResponse,
-                    stimulus: `<div style="width:500px;">
-                                    <p style="font-size:25px;">${task}</p>
-
-                                    </div>
-                                </div>`,
-                    labels: ['Not at all', 'Very Much'],
-                    // slider_width: 500,
-                    require_movement: false,
-                    step: 1,
-                    slider_start: 0,
-                    min: -200,
-                    max: 200,
-                    response_ends_trial: true,
-                    post_trial_gap: 500,
-                    data: {
-                        //  image_path: maps[i],
-                        //  concept: practice_concept,
-                        practiceTrial: true,
-                        practiceTrialNum: i
-                    },
-                    on_finish: function (data) {
-                        var slider_response = data.response;
-                        var trialNum = data.practiceTrialNum;
-                        let upperLimit;
-                        let lowerLimit;
-                        if (trialNum == 0) {
-                            upperLimit = 220;
-                            lowerLimit = 180;
-                        }
-                        else if (trialNum == 1) {
-                            upperLimit = -180;
-                            lowerLimit = -220;
-                        }
-                        else if (trialNum == 2) {
-                            upperLimit = 110;
-                            lowerLimit = 80;
-                        }
-                        else if (trialNum == 3) {
-                            upperLimit = -80;
-                            lowerLimit = -110;
-                        }
-                        console.log(slider_response)
-                        console.log(upperLimit, lowerLimit)
-                        if (slider_response <= upperLimit && slider_response >= lowerLimit) {
-                            data.correct = true;
-                        }
-                        else {
-                            data.correct = false;
-                        }
-                    }
-
-                };
-
-
-                var rating_feedback = {
-                    type: jsPsychHtmlButtonResponse,
-                    stimulus: function () {
-                        var last_resp_correct = jsPsych.data.getLastTrialData().values()[0].correct;
-                        if (last_resp_correct) {
-                            return "<p align='center'><b>Good job!</b> Click on 'Continue' to proceed.</p>"
-                        } else {
-                            return "<p align='center'><b>Not quite!</b> The slider was not placed near the instructed located. Click on 'Continue' to try again. </p>"
-                        }
-                    },
-                    choices: ['Continue']
-                };
-
-                var comp1_loop = {
-                    timeline: [rating_trial, rating_feedback],
-                    loop_function: function (data) {
-                        console.log('data: ', data.values());
-                        if (data.values()[0].correct == true) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    }
-                };
-                timeline.push(comp1_loop);
-            }
-
-            var practice_complete = {
-                type: jsPsychHtmlButtonResponse,
-                stimulus: "<p>Great job! You've completed the practice trials. Now you will begin the main task.</p>",
-                choices: ['Continue']
-            };
-            timeline.push(practice_complete);
-
-
-
-            for (j = 0; j < concept_list.length; j++) {
+            for (j = 0; j < texture_list.length; j++) {
                 var block_break0 = {
                     type: jsPsychHtmlButtonResponse,
-                    stimulus: "<p>In this block of trials, you will be asked to rate how much you associate each texture with the concept</p > " +
-                        "<p style = 'font-size:150%; font-weight: bold'>" + concept_list[j] + "</p><br></br>",
+                    stimulus: "<p>In this block of trials, the participant will be asked to rate how much they associate each concept with the textures</p > " +
+                        "<p style = 'font-size:150%; font-weight: bold'>" + texture_list[j] + "</p><br></br>",
                     choices: ['Continue'],
                 };
                 timeline.push(block_break0);
                 trial_block = [];
-                image_paths = jsPsych.randomization.shuffle(image_paths);
-                for (i = 0; i < Object.keys(image_paths).length; i++) {
-                    this_image = image_paths[i];
+                concept_order = jsPsych.randomization.shuffle(concept_list);
+                for (i = 0; i < concept_order.length; i++) {
+                    this_concept = concept_order[i];
 
-                    this_concept = concept_list[j];
+                    this_texture = texture_list[j];
                     // Define concept based on current exemplar
                     var rating_trial = {
-                        type: jsPsychHtmlSliderResponse,
-                        stimulus: `<div style="width:500px;">
+                        type: jsPsychSurveyText,
+                        preamble: `<div style="width:500px;">
+                            <p style="font-size:50px; font-weight:bold;"
+                            >${this_texture}</p>
                             <p style="font-size:50px; font-weight:bold;"
                             >${this_concept}</p>
-                            <div style="width:240px; margin: auto;">
-                                <img src="${this_image}" style= "width:200px"alt="img">
-                            </div>
                         </div>`,
-                        labels: ['not at all', 'very much'],
-                        slider_width: 500,
-                        require_movement: false,
-                        step: 1,
-                        slider_start: 0,
-                        min: -200,
-                        max: 200,
+                        questions: [
+                            {
+                                prompt: "How much do you associate this texture with the concept?",
+                                rows: 1,
+                                columns: 50
+                            }
+                        ],
                         response_ends_trial: true,
-                        post_trial_gap: 500,
                         data: {
                             // scale: this_scale,
                             concept: this_concept,
                             // image_path: this_map,
-                            texture_id: this_image,
+                            texture_id: this_texture,
                             // repetition: repetition,
                             // map_id: this_map.match(/\d{2}(?=\.png)/)[0], //extracts the map id from the image path
                             // hue: im2cond_dict[this_map]['hue'],
@@ -372,7 +265,7 @@
                 timeline = _.concat(timeline, trial_block);
 
 
-                if (j == concept_list.length - 1) {
+                if (j == texture_list.length - 1) {
                     var block_break = {
                         type: jsPsychHtmlButtonResponse,
                         stimulus: "<p>Great Job! You're done rating all concepts!<br></br></p>",
@@ -380,10 +273,10 @@
                     };
                     timeline.push(block_break)
 
-                } else if (j < concept_list.length) {
+                } else if (j < texture_list.length) {
                     var block_break = {
                         type: jsPsychHtmlButtonResponse,
-                        stimulus: "<p>Great Job! You've finished block " + (j + 1) + ".<br></br> You have " + (concept_list.length - (j + 1)) + " block(s) left to go.<br></br></p>",
+                        stimulus: "<p>Great Job! You've finished block " + (j + 1) + ".<br></br> You have " + (texture_list.length - (j + 1)) + " block(s) left to go.<br></br></p>",
                         choices: ['Next'],
                     };
                     timeline.push(block_break)
@@ -395,7 +288,7 @@
             const save_data = {
                 type: jsPsychPipe,
                 action: "save",
-                experiment_id: "Rn56BHzIriFm",
+                experiment_id: "CohtFpw9fJKx",
                 filename: filename,
                 data_string: () => jsPsych.data.get().csv()
             };
