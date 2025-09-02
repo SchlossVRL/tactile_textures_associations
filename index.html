@@ -6,10 +6,6 @@
     <!-- Load in the jspsych tools, plugins,and layout -->
     <script src="jsPsych/jspsych.js"></script>
 
-    <script src="jsPsych/jspsych-image-slider-response_InstrMAS.js"></script>
-    <script src="jsPsych/plugin-image-slider-response.js"></script>
-    <script src="jsPsych/plugin-html-slider-response.js"></script>
-    <script src="jsPsych/jspsych-image-slider-responseKM.js"></script>
     <script src="jsPsych/plugin-html-button-response.js"></script>
     <script src="jsPsych/plugin-html-keyboard-response.js"></script>
     <script src="jsPsych/plugin-survey-html-form.js"></script>
@@ -209,14 +205,23 @@
             //instructions on how the slider may be moved
             timeline.push(instructions);
 
+            const first_7_textures = texture_list.slice(0, 7);
+            var first_7_preview = {
+                type: jsPsychHtmlKeyboardResponse,
+                stimulus: "<p>In this block of trials, the participant will be asked to rate how much they associate each concept with the textures</p > " +
+                    "<p style = 'font-size:150%; font-weight: bold'>" + first_7_textures.join(", ") + "</p><br></br>",
+                choices: "ALL_KEYS",
+            };
+
+            timeline.push(first_7_preview);
 
 
             for (j = 0; j < texture_list.length; j++) {
                 var block_break0 = {
-                    type: jsPsychHtmlButtonResponse,
-                    stimulus: "<p>In this block of trials, the participant will be asked to rate how much they associate each concept with the textures</p > " +
+                    type: jsPsychHtmlKeyboardResponse,
+                    stimulus: "<p>Texture:</p > " +
                         "<p style = 'font-size:150%; font-weight: bold'>" + texture_list[j] + "</p><br></br>",
-                    choices: ['Continue'],
+                    choices: "ALL_KEYS",
                 };
                 timeline.push(block_break0);
                 trial_block = [];
@@ -236,7 +241,7 @@
                         </div>`,
                         questions: [
                             {
-                                prompt: "How much do you associate this texture with the concept?",
+                                prompt: "Participant rating:",
                                 rows: 1,
                                 columns: 50
                             }
@@ -264,22 +269,18 @@
                 trial_block = jsPsych.randomization.shuffle(trial_block);
                 timeline = _.concat(timeline, trial_block);
 
-
-                if (j == texture_list.length - 1) {
+                if ((j + 1) % 7 === 0 && j !== texture_list.length - 1) {
+                    // Get next 7 textures ready
+                    const next_textures = texture_list.slice(j + 1, j + 8);
                     var block_break = {
-                        type: jsPsychHtmlButtonResponse,
-                        stimulus: "<p>Great Job! You're done rating all concepts!<br></br></p>",
-                        choices: ['Next'],
+                        type: jsPsychHtmlKeyboardResponse,
+                        stimulus: `<p>Great Job! You've finished ${j + 1} textures.<br></br> 
+                            There are ${texture_list.length - (j + 1)} textures left to go.<br></br>
+                            <b>Next up:</b> <span style = 'font-size:150%; font-weight: bold'>${next_textures.join(", ")}</span><br><br>
+                            Take a short break if you need to!</p>`,
+                        choices: "ALL_KEYS",
                     };
-                    timeline.push(block_break)
-
-                } else if (j < texture_list.length) {
-                    var block_break = {
-                        type: jsPsychHtmlButtonResponse,
-                        stimulus: "<p>Great Job! You've finished block " + (j + 1) + ".<br></br> You have " + (texture_list.length - (j + 1)) + " block(s) left to go.<br></br></p>",
-                        choices: ['Next'],
-                    };
-                    timeline.push(block_break)
+                    timeline.push(block_break);
                 }
             }
 
