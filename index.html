@@ -127,7 +127,7 @@
                 type: jsPsychHtmlButtonResponse,
                 stimulus: 'Welcome to the experiment!' +
                     '<p>[At the bottom of this screen, you will see a button that says "Begin Experiment".]' +
-                    '<p>[Please click the button to begin the experiment.]</p>',
+                    '<p>[Click the button to begin the experiment.]</p>',
                 choices: ['Begin Experiment']
             }
             timeline.push(initial_screen);
@@ -152,34 +152,29 @@
                             </div>
 
                             <div style="text-align: left; width: 1200px;">
-                                <p style="font-size:18px; line-height:20px; text-align:center; font-weight:bold ">${concept_list[0]},
+                                <p style="font-size:150%; line-height:20px; text-align:center; font-weight:bold ">${concept_list[0]},
                                     ${concept_list[1]}, ${concept_list[2]}, ${concept_list[3]}, ${concept_list[4]}
                                 <p style="font-size:18px; line-height:18px;"></p>
                             </div>
                             <div style='text-align:left; font-size:18px; line-height:25px; width: 1200px;'>
-                                For each texture bar, you will be asked to rate how much you associate it with each concept
-                                on a scale from 1 to 9 where 1 means 'not at all' and 9 means 'very much'.\
+                                For each texture bar, you will be asked to rate how much you associate it with each concept.\
                             </div>
                             <br>
                             <div style='text-align:left; font-size:18px; line-height:25px; width: 1200px;'>
                                 Each trial will include one texture bar and one concept word. You will be asked to make your rating by
                                 reporting how strongly you associate the texture with the concept on a scale from 1 to 9 where 1 means 'not at all' associated
-                                and 9 means 'very much' associated.<br>\
+                                and 9 means 'very much' associated.<br><br>\
                                 Before beginning, I will present you with the full set of textures. I will present them 7 at a time in a sequence of 5 plates.\
-                                Please feel all of the textures in each plate and think about which concepts you associate most strongly and most weakly with each texture.\
-                                We will begin with the 1st plate of 7 textures. As a reminder the concepts you will be rating are:\
-                                <span style = 'font-size:150%; font-weight: bold'>${concept_list[0]}, ${concept_list[1]}, ${concept_list[2]}, ${concept_list[3]}, ${concept_list[4]}</span>\\
-                                [Place anchoring plate one in the box and proceed through the remaining 4 in order until all textures have been felt. Watch to make sure the participant feels all the textures in a plate. Remind them of the concepts they will be rating.]\
-                                When you see that texture paired with that concept please click on the left endpoint of the scale near 'not at
-                                all'.\
-                                Now, please think about the texture you associate most with it.\
-                                When you see that texture paired with that concept please click on the right endpoint of the scale near 'very
-                                much'. <br><br>\
-                                Please use the full range of the scale.\
-                                That is, if you believe a concept is somewhat associated with a texture, you would click at the midpoint of the
-                                scale.\
-                                You will be asked to rate each texture for a given concept before moving on to the next.<br>Press the 'Continue'
-                                button for instructions on how to use the slider.
+                                Please feel all of the textures in each plate and think about which textures you associate most strongly and most weakly with each concept.\
+                                We will begin with the 1st plate of 7 textures. As a reminder the concepts you will be rating are: <br><br>\
+                                </div>
+                                <span style = 'font-size:150%; text-align:center; font-weight: bold'>${concept_list[0]}, ${concept_list[1]}, ${concept_list[2]}, ${concept_list[3]}, ${concept_list[4]}</span><br><br>\
+                                <div style='text-align:left; font-size:18px; line-height:25px; width: 1200px;'>
+                                [Place anchoring plate one in the box and proceed through the remaining 4 in order until all textures have been felt. Watch to make sure the participant feels all the textures in a plate. Remind them of the concepts they will be rating.]<br><br>\
+                                For each trial please say outloud a number from 1 to 9 to indicate how strongly you associate the current texture with the current concept. Again, a 1 indicates you do not associate the concept with the texture at all and a 9 indicates you very much associate the texture with the concept.<br><br>\
+                                Please be sure to use the full range of the scale.<br><br>\
+                                You will be asked to rate each concept for a given texture before moving on to the next. There are 5 blocks of trials. I will notify you when you have completed each block. Do you have any questions?<br><br>
+                                [Click the 'Continue' button to start the trials when ready.]
 
                             </div>
                             <!-- Centered text paragraphs -->
@@ -200,9 +195,10 @@
             const first_7_textures = texture_list.slice(0, 7);
             var first_7_preview = {
                 type: jsPsychHtmlKeyboardResponse,
-                stimulus: "<p>[In this block of trials, the participant will be asked to rate how much they associate each concept with the textures]</p > " +
+                stimulus: "<p>[In this block of trials, the participant will be asked to rate how much they associate each concept with the textures]</p>" +
                     "<p style = 'font-size:150%; font-weight: bold'>" + first_7_textures.join(", ") + "</p><br></br>" +
-                    "<p>[Take a moment to find a lay out the textures in order that they will rate in this block.]</p>",
+                    "<p>[Take a moment to find a lay out the textures in order that they will rate in this block.]</p><br></br>" +
+                    "<p>[Press 'Enter' to continue]</p>",
 
                 choices: "ALL_KEYS",
             };
@@ -214,7 +210,8 @@
                 var block_break0 = {
                     type: jsPsychHtmlKeyboardResponse,
                     stimulus: "<p>Texture:</p > " +
-                        "<p style = 'font-size:150%; font-weight: bold'>" + texture_list[j] + "</p><br></br>",
+                        "<p style = 'font-size:150%; font-weight: bold'>" + texture_list[j] + "</p><br></br>" +
+                        "<p>[Press 'Enter' to continue]</p>",
                     choices: "ALL_KEYS",
                 };
                 timeline.push(block_break0);
@@ -263,15 +260,22 @@
                 trial_block = jsPsych.randomization.shuffle(trial_block);
                 timeline = _.concat(timeline, trial_block);
 
+                let block_break_count = 0; // Initialize block break counter
+
                 if ((j + 1) % 7 === 0 && j !== texture_list.length - 1) {
+                    block_break_count++;
                     // Get next 7 textures ready
                     const next_textures = texture_list.slice(j + 1, j + 8);
                     var block_break = {
                         type: jsPsychHtmlKeyboardResponse,
-                        stimulus: `<p>Great Job! You've finished ${j + 1} textures.<br></br> 
-                            There are ${texture_list.length - (j + 1)} textures left to go.<br></br>
-                            <b>Next up:</b> <span style = 'font-size:150%; font-weight: bold'>${next_textures.join(", ")}</span><br><br>
-                            Take a short break if you need to!</p>`,
+                        stimulus: `<p>
+                            <b>You have completed ${block_break_count} of ${Math.ceil(texture_list.length / 7)} trial blocks.<br></br></b>
+                            [For experimenter: You have completed ${j + 1} textures. There are ${texture_list.length - (j + 1)} textures left to go.]<br></br>
+                            <b>Next up:</b><br></br>
+                            <b><span style = 'font-size:150%; font-weight: bold'>${next_textures.join(", ")}</span></b><br><br>
+                            [Take a moment to find and lay out the textures in order that they will rate in this block.]<br></br>
+                            <br></br>
+                            [Press 'Enter' to continue]</p>`,
                         choices: "ALL_KEYS",
                     };
                     timeline.push(block_break);
@@ -294,11 +298,14 @@
             var debrief_script = {
                 type: jsPsychHtmlKeyboardResponse,
                 stimulus: '<div style="width:800px">Great job! You have finished the experiment.' +
-                    '<p> The goal of this experiment is to determine the organization of concepts in the human mind.<br>' +
-                    '<p> Others who participate in this study may have been shown different scales than the ones you were.\
-                        Please do not inform other potential participants of the hypotheses in our experiment' +
+                    '<p> Our lab is generally interested in understanding how we can use touch to communicate about data, such as data found in weather maps or even journal articles about psychology research. <br>' +
+                    '<p> This knowledge may contribute to the design of data “tactilizations” to make data more accessible for those who are visually impaired and to make touch systems easier to use for sighted observers like navigation systems in cars. <br>' +
+                    "<p> Before we tackle this bigger question, we first need to figure out which textures people associate strongly and weakly with which concepts and how these associations align with people's expectatons about the meanings of textures in different contexts. <br>" +
+                    '<p> In this experiment, you rated how much you associated each texture with some of the concepts we are studying, other particiants in this study may rate different concepts.\
+                        We will use this data to design future experiments to investigate how we can use texture to communicate effectively.</p>' +
+                    '<p> Do you have any questions?' +
                     '<p> Credit for your participation will be appear on SONA in the next few days.' +
-                    '<p> Thank you for participating! You may now close this window.</p></div>',
+                    '<p> Thank you for participating!</p></div>',
                 choices: ['NO_KEYS']
             }
             timeline.push({
