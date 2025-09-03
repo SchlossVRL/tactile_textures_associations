@@ -105,11 +105,11 @@
 
             //ALL conditions
             console.log("participant_id:", participant_id)
-            console.log("condition_index", condition_index)
+            console.log("condition_index:", condition_index)
             condition_num = condition_index - 1;
-            console.log("condition_num", condition_num)
+            console.log("condition_num:", condition_num)
             concept_list = concept_conds[condition_num]
-            console.log("concept_list", concept_list)
+            console.log("concept_list:", concept_list)
             concept_list = jsPsych.randomization.shuffle(concept_list);
             texture_list = jsPsych.randomization.shuffle(textures);
 
@@ -125,10 +125,9 @@
             // Initial welcome screen
             var initial_screen = {
                 type: jsPsychHtmlButtonResponse,
-                stimulus: 'Welcome to our experiment!' +
-                    '<p>At the bottom of this screen, you will see a button that says "Begin Experiment".' +
-                    '<br>Please only click that button when you are ready to complete the 30 minute experiment in one sitting.</p>' +
-                    '<p> Once you click that button, it will not be possible to restart the experiment.',
+                stimulus: 'Welcome to the experiment!' +
+                    '<p>[At the bottom of this screen, you will see a button that says "Begin Experiment".]' +
+                    '<p>[Please click the button to begin the experiment.]</p>',
                 choices: ['Begin Experiment']
             }
             timeline.push(initial_screen);
@@ -143,23 +142,13 @@
             })
 
 
-            // Overview instructions of experiment
-            var overview_instructions = {
-                type: jsPsychHtmlButtonResponse,
-                stimulus: 'Welcome! <p> This experiment involves two parts: demographic information, followed by the experimental task.' +
-                    '<p> It will take about 30 minutes to complete both parts.',
-                choices: ['Continue']
-            }
-            timeline.push(overview_instructions);
-
-
             var instructions = {
                 type: jsPsychHtmlButtonResponse,
                 //type: jsPsychHtmlSliderResponse,
                 stimulus: `
                         <div style="height:720px;">
                             <div style='text-align:left; font-size:18px; line-height:25px; width: 1200px;'>
-                                During this experiment you will be presented with a series of concepts, one at a time, from the set below: \
+                                During this experiment you will be presented with a series of texture bars and concepts. The concepts you will be presented with are: \
                             </div>
 
                             <div style="text-align: left; width: 1200px;">
@@ -174,10 +163,13 @@
                             <br>
                             <div style='text-align:left; font-size:18px; line-height:25px; width: 1200px;'>
                                 Each trial will include one texture bar and one concept word. You will be asked to make your rating by
-                                reporting how strongly you associate the texture with the concept on a scale from 1 to 9 where 1 means 'not at all'
-                                and 9 means 'very much'.<br>\
-                                Before beginning, please look at the list of concepts and textures. \
-                                For each concept, think about the texture you associate least with it.\
+                                reporting how strongly you associate the texture with the concept on a scale from 1 to 9 where 1 means 'not at all' associated
+                                and 9 means 'very much' associated.<br>\
+                                Before beginning, I will present you with the full set of textures. I will present them 7 at a time in a sequence of 5 plates.\
+                                Please feel all of the textures in each plate and think about which concepts you associate most strongly and most weakly with each texture.\
+                                We will begin with the 1st plate of 7 textures. As a reminder the concepts you will be rating are:\
+                                <span style = 'font-size:150%; font-weight: bold'>${concept_list[0]}, ${concept_list[1]}, ${concept_list[2]}, ${concept_list[3]}, ${concept_list[4]}</span>\\
+                                [Place anchoring plate one in the box and proceed through the remaining 4 in order until all textures have been felt. Watch to make sure the participant feels all the textures in a plate. Remind them of the concepts they will be rating.]\
                                 When you see that texture paired with that concept please click on the left endpoint of the scale near 'not at
                                 all'.\
                                 Now, please think about the texture you associate most with it.\
@@ -208,8 +200,10 @@
             const first_7_textures = texture_list.slice(0, 7);
             var first_7_preview = {
                 type: jsPsychHtmlKeyboardResponse,
-                stimulus: "<p>In this block of trials, the participant will be asked to rate how much they associate each concept with the textures</p > " +
-                    "<p style = 'font-size:150%; font-weight: bold'>" + first_7_textures.join(", ") + "</p><br></br>",
+                stimulus: "<p>[In this block of trials, the participant will be asked to rate how much they associate each concept with the textures]</p > " +
+                    "<p style = 'font-size:150%; font-weight: bold'>" + first_7_textures.join(", ") + "</p><br></br>" +
+                    "<p>[Take a moment to find a lay out the textures in order that they will rate in this block.]</p>",
+
                 choices: "ALL_KEYS",
             };
 
