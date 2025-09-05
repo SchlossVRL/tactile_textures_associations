@@ -142,13 +142,14 @@
             })
 
 
-            var instructions = {
+            var instructions1 = {
                 type: jsPsychHtmlButtonResponse,
                 //type: jsPsychHtmlSliderResponse,
                 stimulus: `
                         <div style="height:720px;">
                             <div style='text-align:left; font-size:18px; line-height:25px; width: 1200px;'>
-                                During this experiment you will be presented with a series of texture bars and concepts. The concepts you will be presented with are: \
+                                During this experiment you will be presented with a series of texture bars and concepts. You will be asked to rate how much you associate each texture bar with each concept on a scale from "not at all" associated to "very much associated". <br>
+                                The texture bars will be placed in the box in front of you so that you won't see them when you reach in to touch while making your ratings. The concepts you will be presented with are: \
                             </div>
 
                             <div style="text-align: left; width: 1200px;">
@@ -157,9 +158,45 @@
                                 <p style="font-size:18px; line-height:18px;"></p>
                             </div>
                             <div style='text-align:left; font-size:18px; line-height:25px; width: 1200px;'>
-                                For each texture bar, you will be asked to rate how much you associate it with each concept.\
                             </div>
                             <br>
+                            <div style='text-align:left; font-size:18px; line-height:25px; width: 1200px;'>
+                                Each trial will include one texture bar and one concept word. You will be asked to make your rating by
+                                reporting how strongly you associate the texture with the concept on a scale from 1 to 9 where 1 means 'not at all' associated
+                                and 9 means 'very much' associated.<br><br>\
+                                Before beginning, I will present you with the full set of textures. I will present them 7 at a time in a sequence of 5 plates.\
+                                Please feel all of the textures in each plate and think about which textures you associate most strongly and most weakly with each concept. \
+                                We will begin with the 1st plate of 7 textures. As a reminder the concepts you will be rating are: <br><br>\
+                                </div>
+                                <span style = 'font-size:150%; text-align:center; font-weight: bold'>${concept_list[0]}, ${concept_list[1]}, ${concept_list[2]}, ${concept_list[3]}, ${concept_list[4]}</span><br><br>\
+                                <div style='text-align:left; font-size:18px; line-height:25px; width: 1200px;'>
+                                [Place anchoring plate one in the box and proceed through the remaining 4 in order until all textures have been felt. Watch to make sure the participant feels all the textures in a plate. Remind them of the concepts they will be rating.]<br><br>\
+                                For each trial please say outloud a number from 1 to 9 to indicate how strongly you associate the current texture with the current concept. Again, a 1 indicates you do not associate the concept with the texture at all and a 9 indicates you very much associate the texture with the concept.<br><br>\
+                                Please be sure to use the full range of the scale.<br><br>\
+                                You will be asked to rate each concept for a given texture before moving on to the next. There are 5 blocks of trials. I will notify you when you have completed each block. Do you have any questions?<br><br>
+                                [Click the 'Continue' button to start the trials when ready.]
+
+                            </div>
+                            <!-- Centered text paragraphs -->
+
+                        </div>
+                         `,
+                choices: ['Continue'],
+                data: {
+                    practiceTrial: true,
+                }
+            }
+
+
+
+            //instructions on the textures, box, and anchoring
+            timeline.push(instructions1);
+
+            var instructions2 = {
+                type: jsPsychHtmlButtonResponse,
+                //type: jsPsychHtmlSliderResponse,
+                stimulus: `
+                        <div style="height:720px;">
                             <div style='text-align:left; font-size:18px; line-height:25px; width: 1200px;'>
                                 Each trial will include one texture bar and one concept word. You will be asked to make your rating by
                                 reporting how strongly you associate the texture with the concept on a scale from 1 to 9 where 1 means 'not at all' associated
@@ -189,8 +226,10 @@
 
 
 
-            //instructions on how the slider may be moved
-            timeline.push(instructions);
+            //instructions on trials
+            timeline.push(instructions2);
+
+            let block_break_count = 0; // Initialize block break counter
 
             const first_7_textures = texture_list.slice(0, 7);
             var first_7_preview = {
@@ -260,7 +299,6 @@
                 trial_block = jsPsych.randomization.shuffle(trial_block);
                 timeline = _.concat(timeline, trial_block);
 
-                let block_break_count = 0; // Initialize block break counter
 
                 if ((j + 1) % 7 === 0 && j !== texture_list.length - 1) {
                     block_break_count++;
@@ -269,7 +307,7 @@
                     var block_break = {
                         type: jsPsychHtmlKeyboardResponse,
                         stimulus: `<p>
-                            <b>You have completed ${block_break_count} of ${Math.ceil(texture_list.length / 7)} trial blocks.<br></br></b>
+                            <b>You have completed ${Math.floor((j + 1) / 7)} of ${Math.ceil(texture_list.length / 7)} trial blocks.<br></br></b>
                             [For experimenter: You have completed ${j + 1} textures. There are ${texture_list.length - (j + 1)} textures left to go.]<br></br>
                             <b>Next up:</b><br></br>
                             <b><span style = 'font-size:150%; font-weight: bold'>${next_textures.join(", ")}</span></b><br><br>
