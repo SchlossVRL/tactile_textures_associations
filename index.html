@@ -112,8 +112,7 @@
             console.log("concept_list:", concept_list)
             concept_list = jsPsych.randomization.shuffle(concept_list);
             texture_list = jsPsych.randomization.shuffle(textures);
-
-
+            console.log("texture_list:", texture_list)
 
             jsPsych.data.addProperties({
                 subject_id: subject_id,
@@ -148,8 +147,11 @@
                 stimulus: `
                         <div style="height:720px;">
                             <div style='text-align:left; font-size:18px; line-height:25px; width: 1200px;'>
-                                During this experiment you will be presented with a series of texture bars and concepts. You will be asked to rate how much you associate each texture bar with each concept on a scale from "not at all" associated to "very much associated". <br>
-                                The texture bars will be placed in the box in front of you so that you won't see them when you reach in to touch while making your ratings. The concepts you will be presented with are: \
+                                During this experiment you will be presented with a series of texture bars and concepts. <br><br>\
+                                The texture bars will be placed in the box in front of you so that you won't be able to see them. <br><br>\
+                                During each trial you will be asked to feel each texture bar by reaching into the box and locating the texture bar by touch. <br><br>\
+                                You will be asked to rate how much you associate each texture bar with each concept on a scale from "not at all" associated to "very much associated". <br><br>\
+                                The concepts you will be presented with are: \
                             </div>
 
                             <div style="text-align: left; width: 1200px;">
@@ -161,21 +163,7 @@
                             </div>
                             <br>
                             <div style='text-align:left; font-size:18px; line-height:25px; width: 1200px;'>
-                                Each trial will include one texture bar and one concept word. You will be asked to make your rating by
-                                reporting how strongly you associate the texture with the concept on a scale from 1 to 9 where 1 means 'not at all' associated
-                                and 9 means 'very much' associated.<br><br>\
-                                Before beginning, I will present you with the full set of textures. I will present them 7 at a time in a sequence of 5 plates.\
-                                Please feel all of the textures in each plate and think about which textures you associate most strongly and most weakly with each concept. \
-                                We will begin with the 1st plate of 7 textures. As a reminder the concepts you will be rating are: <br><br>\
-                                </div>
-                                <span style = 'font-size:150%; text-align:center; font-weight: bold'>${concept_list[0]}, ${concept_list[1]}, ${concept_list[2]}, ${concept_list[3]}, ${concept_list[4]}</span><br><br>\
-                                <div style='text-align:left; font-size:18px; line-height:25px; width: 1200px;'>
-                                [Place anchoring plate one in the box and proceed through the remaining 4 in order until all textures have been felt. Watch to make sure the participant feels all the textures in a plate. Remind them of the concepts they will be rating.]<br><br>\
-                                For each trial please say outloud a number from 1 to 9 to indicate how strongly you associate the current texture with the current concept. Again, a 1 indicates you do not associate the concept with the texture at all and a 9 indicates you very much associate the texture with the concept.<br><br>\
-                                Please be sure to use the full range of the scale.<br><br>\
-                                You will be asked to rate each concept for a given texture before moving on to the next. There are 5 blocks of trials. I will notify you when you have completed each block. Do you have any questions?<br><br>
-                                [Click the 'Continue' button to start the trials when ready.]
-
+                                [Click the 'Continue' button for the next set of instructions.]
                             </div>
                             <!-- Centered text paragraphs -->
 
@@ -201,16 +189,18 @@
                                 Each trial will include one texture bar and one concept word. You will be asked to make your rating by
                                 reporting how strongly you associate the texture with the concept on a scale from 1 to 9 where 1 means 'not at all' associated
                                 and 9 means 'very much' associated.<br><br>\
-                                Before beginning, I will present you with the full set of textures. I will present them 7 at a time in a sequence of 5 plates.\
-                                Please feel all of the textures in each plate and think about which textures you associate most strongly and most weakly with each concept.\
+                                During the experiment trials, we will ask you to wear headphones that play sounds similar to the sound of rain in a forest. The reason is so that you do not hear the sound of your fingers moving across the textures. Please put the headphones on now. <br><br>\
+                                Before making any ratings, I will present you with the full set of textures and concepts to consider when you make your ratings in the experiment trials. I will present the texture bars 7 at a time in a sequence of 5 plates.\
+                                Please feel all of the textures in each plate and think about which textures you associate most strongly and most weakly with each concept. <br><br> \
                                 We will begin with the 1st plate of 7 textures. As a reminder the concepts you will be rating are: <br><br>\
                                 </div>
                                 <span style = 'font-size:150%; text-align:center; font-weight: bold'>${concept_list[0]}, ${concept_list[1]}, ${concept_list[2]}, ${concept_list[3]}, ${concept_list[4]}</span><br><br>\
                                 <div style='text-align:left; font-size:18px; line-height:25px; width: 1200px;'>
-                                [Place anchoring plate one in the box and proceed through the remaining 4 in order until all textures have been felt. Watch to make sure the participant feels all the textures in a plate. Remind them of the concepts they will be rating.]<br><br>\
-                                For each trial please say outloud a number from 1 to 9 to indicate how strongly you associate the current texture with the current concept. Again, a 1 indicates you do not associate the concept with the texture at all and a 9 indicates you very much associate the texture with the concept.<br><br>\
+                                [Place anchoring plate one in the box and proceed through the remaining four in order until all textures have been felt. Watch to make sure the participant feels all the textures in each plate. Remind them of the concepts they will be rating.]<br><br>\
+                                Great! Now we are ready to begin the experimental trials. For each trial please say outloud a number from 1 to 9 to indicate how strongly you associate the current texture with the current concept. Again, a 1 indicates you do not associate the concept with the texture at all and a 9 indicates you very much associate the texture with the concept.<br><br>\
                                 Please be sure to use the full range of the scale.<br><br>\
-                                You will be asked to rate each concept for a given texture before moving on to the next. There are 5 blocks of trials. I will notify you when you have completed each block. Do you have any questions?<br><br>
+                                You will be asked to rate each concept for a given texture before moving on to the next. Please be sure to continuously touch each texture as you rate each concept before moving on to the next texture.\
+                                There are 5 blocks of trials. I will notify you when you have completed each block. Do you have any questions?<br><br>
                                 [Click the 'Continue' button to start the trials when ready.]
 
                             </div>
