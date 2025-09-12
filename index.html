@@ -106,7 +106,9 @@
             //ALL conditions
             console.log("participant_id:", participant_id)
             console.log("condition_index:", condition_index)
-            condition_num = condition_index - 1;
+            //condition_num = condition_index - 1;
+            condition_num = (parseInt(participant_id) - 1) % 14;
+            if (condition_num < 0) condition_num += 14;
             console.log("condition_num:", condition_num)
             concept_list = concept_conds[condition_num]
             console.log("concept_list:", concept_list)
@@ -328,8 +330,8 @@
                 stimulus: '<div style="width:800px">Great job! You have finished the experiment.' +
                     '<p> Our lab is generally interested in understanding how we can use touch to communicate about data, such as data found in weather maps or even journal articles about psychology research. <br>' +
                     '<p> This knowledge may contribute to the design of data “tactilizations” to make data more accessible for those who are visually impaired and to make touch systems easier to use for sighted observers like navigation systems in cars. <br>' +
-                    "<p> Before we tackle this bigger question, we first need to figure out which textures people associate strongly and weakly with which concepts and how these associations align with people's expectatons about the meanings of textures in different contexts. <br>" +
-                    '<p> In this experiment, you rated how much you associated each texture with some of the concepts we are studying, other particiants in this study may rate different concepts.\
+                    "<p> Before we tackle this bigger question, we first need to figure out which textures people associate strongly and weakly with which concepts and how these associations align with people's expectations about the meanings of textures in different contexts. <br>" +
+                    '<p> In this experiment, you rated how much you associated each texture with some of the concepts we are studying, other participants in this study may rate different concepts.\
                         We will use this data to design future experiments to investigate how we can use texture to communicate effectively.</p>' +
                     '<p> Do you have any questions?' +
                     '<p> Credit for your participation will be appear on SONA in the next few days.' +
