@@ -35,9 +35,12 @@
 
         async function createExperiment() {
 
+            const local_sub = Math.random().toString(36).substring(2, 12);
+            const local_save = `${local_sub}.csv`;
+
             var jsPsych = initJsPsych({
                 on_finish: function () {
-                    jsPsych.data.get().localSave("csv", filename);
+                    jsPsych.data.get().localSave("csv", local_save);
                 }
             }
             );
